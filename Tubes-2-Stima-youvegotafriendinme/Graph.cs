@@ -16,9 +16,17 @@ namespace Tubes_2_Stima_youvegotafriendinme
         {
             //Mengambil dahulu semua nama node
             char[] delimiterChars = { ' ', '\r', '\n' };
-            List<string> textSplit = text.Split(delimiterChars).ToList();
-            int length = textSplit.Count;
-            
+            List<string> rawSplit = text.Split(delimiterChars).ToList();
+            int length = rawSplit.Count;
+            List<string> textSplit = new List<string>();
+            for(int i=0; i<length; i++)
+            {
+                if(rawSplit[i] != "")
+                {
+                    textSplit.Add(rawSplit[i]);
+                }
+            }
+            length = textSplit.Count;
             textSplit.Sort();
             nodeNames = new List<string>();
             nodeNames.Add(textSplit[0]);
@@ -43,13 +51,23 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 adjacencyList.Add(addList);
             }
             //Menambahkan tiap edge pada graph
-            textSplit = text.Split(delimiterChars).ToList();
+            length = rawSplit.Count;
+            textSplit = new List<string>();
+            for (int i = 0; i < length; i++)
+            {
+                if (rawSplit[i] != "")
+                {
+                    textSplit.Add(rawSplit[i]);
+                }
+            }
+            length = textSplit.Count;
             edges = new List<Tuple<string, string>>();
             for (int i=0; i<length; i += 2)
             {
                 adjacencyList[nodeIdx[textSplit[i]]].Add(nodeIdx[textSplit[i+1]]);
                 adjacencyList[nodeIdx[textSplit[i+1]]].Add(nodeIdx[textSplit[i]]);
-                edges.Add(new Tuple<string, string>(textSplit[i], textSplit[i + 1]));
+                Tuple<string, string> toAdd = new Tuple<string, string>(textSplit[i], textSplit[i + 1]);
+                edges.Add(toAdd);
             }
             for(int i=0; i<nodes; i++)
             {

@@ -18,7 +18,9 @@ namespace Tubes_2_Stima_youvegotafriendinme
         string filename;
         string filecontent;
         string accountPicked="";
-
+        Graph Friends;
+        Microsoft.Msagl.Drawing.Graph graph;
+        Microsoft.Msagl.GraphViewerGdi.GViewer viewer;
         public Form1()
         {
             InitializeComponent();
@@ -72,26 +74,28 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 filename = openFileDialog1.FileName;
                 filecontent = File.ReadAllText(filename);
                 label12.Text = "";
-                Graph Friends = new Graph(filecontent);
+                Friends = new Graph(filecontent);
                 List<string> nodeNames = Friends.getNodeNames();
                 for(int i=0; i<nodeNames.Count; i++)
                 {
                     comboBox1.Items.Add(nodeNames[i]);
                     comboBox2.Items.Add(nodeNames[i]);
                 }
-                Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
                 //create a graph object 
                 //create the graph content 
-                Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
+                graph = new Microsoft.Msagl.Drawing.Graph("graph");
                 List<Tuple<string, string>> edges = Friends.getEdges();
                 for(int i=0; i<edges.Count; i++)
                 {
                     label12.Text += edges[i].Item1;
                     label12.Text += edges[i].Item2;
+                    label12.Text += ";";
+                    graph.AddEdge(edges[i].Item1, edges[i].Item2).Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
                 }
-                /*graph.AddEdge("A", "B").Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                graph.AddEdge("B", "C");
-                graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+                /*graph.AddEdge("B", "C");
+                graph.AddEdge("A", C).Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+
                 graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
                 graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
                 Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
