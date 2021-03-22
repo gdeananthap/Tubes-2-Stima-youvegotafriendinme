@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tubes_2_Stima
+namespace Tubes_2_Stima_youvegotafriendinme
 {
     public class Graph
     {
@@ -10,13 +10,16 @@ namespace Tubes_2_Stima
         private List<List<int>> adjacencyList;
         private List<string> nodeNames;
         private Dictionary<string, int> nodeIdx;
+        private List<Tuple<string, string>> edges;
+
         public Graph(string text)
         {
             //Mengambil dahulu semua nama node
-            char[] delimiterChars = { ' ', '\n' };
+            char[] delimiterChars = { ' ', '\r', '\n' };
             List<string> textSplit = text.Split(delimiterChars).ToList();
-            textSplit.Sort();
             int length = textSplit.Count;
+            
+            textSplit.Sort();
             nodeNames = new List<string>();
             nodeNames.Add(textSplit[0]);
             for(int i=1; i<length; i++)
@@ -41,24 +44,29 @@ namespace Tubes_2_Stima
             }
             //Menambahkan tiap edge pada graph
             textSplit = text.Split(delimiterChars).ToList();
-            for(int i=0; i<length; i += 2)
+            edges = new List<Tuple<string, string>>();
+            for (int i=0; i<length; i += 2)
             {
                 adjacencyList[nodeIdx[textSplit[i]]].Add(nodeIdx[textSplit[i+1]]);
+                adjacencyList[nodeIdx[textSplit[i+1]]].Add(nodeIdx[textSplit[i]]);
+                edges.Add(new Tuple<string, string>(textSplit[i], textSplit[i + 1]));
             }
             for(int i=0; i<nodes; i++)
             {
                 adjacencyList[i].Sort();
             }
         }
-
         public List<int> getFriendNodes(int from)
         {
             return adjacencyList[from];
         }
-        public void AddEdge(int node1, int node2)
+        public List<string> getNodeNames()
         {
-            adjacencyList[node1].Add(node2);
-            adjacencyList[node2].Add(node1);
+            return nodeNames;
+        }
+        public List<Tuple<string, string>> getEdges()
+        {
+            return edges;
         }
         public int[] BFS(int from, int to)
         {
@@ -256,55 +264,5 @@ namespace Tubes_2_Stima
             return result;
         }
     }
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Graph Friend = new Graph("A B\nA C\nA D\nB C\nB E\nB F\nC F\nC G\nD G\nD F\nE H\nE F\nF H");
-            int[] path = Friend.BFS(0, 7);
-            Console.WriteLine("[{0}]", string.Join(", ", path));
-            path = Friend.ExploreFriendDFS(0, 7);
-            Console.WriteLine("[{0}]", string.Join(", ", path));
-            /*
-            Graph Friend = new Graph(8);
-            Friend.AddEdge(0, 1);
-            Friend.AddEdge(0, 2);
-            Friend.AddEdge(0, 3);
-            Friend.AddEdge(1, 2);
-            Friend.AddEdge(1, 4);
-            Friend.AddEdge(1, 5);
-            Friend.AddEdge(2, 5);
-            Friend.AddEdge(2, 6);
-            Friend.AddEdge(3, 5);
-            Friend.AddEdge(3, 6);
-            Friend.AddEdge(4, 5);
-            Friend.AddEdge(4, 7);
-            Friend.AddEdge(5, 7);
-            Dictionary<int, List<int>> friends = Friend.FriendRecommendationBFS(0);
-            var sortedResult = (from val in friends orderby val.Value.Count descending select val);
-            Console.WriteLine("Daftar rekomendasi teman untuk {0}", 0);
-            foreach (KeyValuePair<int, List<int>> f in sortedResult)
-            {
-                if (f.Value.Count > 0)
-                {
-                    Console.WriteLine("Nama Akun: {0}", f.Key);
-                    Console.WriteLine("{0} mutual friends:", f.Value.Count);
-                    foreach(int acc in f.Value)
-                    {
-                        Console.WriteLine("{0}", acc);
-                    }
-                   
-                }
-            }
-            int[] path = Friend.BFS(0, 7);
-            Console.WriteLine("[{0}]", string.Join(", ", path));
-            List<Tuple<int, List<int>>> FriendRecommendation = Friend.SortedFriendRecommendation(0, true);
-            int NBRecommend = FriendRecommendation.Count;
-            for (int i=0; i<NBRecommend; i++)
-            {
-                Console.WriteLine("Nama Akun {0}: [{1}]", FriendRecommendation[i].Item1, string.Join(", ", FriendRecommendation[i].Item2));
-            }
-            */
-        }
-    }
+    
 }
