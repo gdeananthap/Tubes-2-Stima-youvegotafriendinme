@@ -86,6 +86,17 @@ namespace Tubes_2_Stima_youvegotafriendinme
         {
             return edges;
         }
+        public string[] ExploreFriendBFS(string from, string to)
+        {
+            int[] path = BFS(nodeIdx[from], nodeIdx[to]);
+            int length = path.Length;
+            string[] toReturn = new string[length];
+            for(int i=0; i<length; i++)
+            {
+                toReturn[i] = nodeNames[path[i]];
+            }
+            return toReturn;
+        }
         public int[] BFS(int from, int to)
         {
             int[] backtrack = new int[nodes];

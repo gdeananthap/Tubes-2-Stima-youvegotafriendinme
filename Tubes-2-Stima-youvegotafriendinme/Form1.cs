@@ -20,6 +20,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
         string accountPicked="";
         Graph Friends;
         Microsoft.Msagl.Drawing.Graph graph;
+        Dictionary<string, Dictionary<string, Microsoft.Msagl.Drawing.Edge>> graphEdges;
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer;
         public Form1()
         {
@@ -86,12 +87,19 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 //create the graph content 
                 graph = new Microsoft.Msagl.Drawing.Graph("graph");
                 List<Tuple<string, string>> edges = Friends.getEdges();
+                graphEdges = new Dictionary<string, Dictionary<string, Microsoft.Msagl.Drawing.Edge>>();
+                for(int i=0; i<nodeNames.Count; i++)
+                {
+                    Dictionary<string, Microsoft.Msagl.Drawing.Edge> toAdd = new Dictionary<string, Microsoft.Msagl.Drawing.Edge>();
+                    graphEdges.Add(nodeNames[i], toAdd);
+                }
+                string node1, node2;
                 for(int i=0; i<edges.Count; i++)
                 {
-                    label12.Text += edges[i].Item1;
-                    label12.Text += edges[i].Item2;
-                    label12.Text += ";";
-                    graph.AddEdge(edges[i].Item1, edges[i].Item2).Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                    node1 = edges[i].Item1;
+                    node2 = edges[i].Item2;
+                    graphEdges[node1].Add(node2, graph.AddEdge(node1, node2));
+                    graphEdges[node1][node2].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
                 }
                 /*graph.AddEdge("B", "C");
                 graph.AddEdge("A", C).Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
@@ -138,7 +146,27 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     }
                     else
                     {
+                        panel11.Controls.Remove(viewer);
                         label12.Text = "Explore friends with BFS from account " + comboBox1.Text + " to account " + comboBox2.Text;
+                        refreshGraph();
+                        string[] path = Friends.ExploreFriendBFS(comboBox1.Text, comboBox2.Text);
+                        for(int i=1; i<path.Length; i++)
+                        {
+                            if (graphEdges[path[i-1]].ContainsKey(path[i]))
+                            {
+                                graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                graphEdges[path[i - 1]][path[i]].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                            }
+                            else
+                            {
+                                graphEdges[path[i]][path[i-1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                graphEdges[path[i]][path[i-1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                            }
+                        }
+                        viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                        viewer.Graph = graph;
+                        viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                        panel11.Controls.Add(viewer);
                     }
                         
                 }
@@ -162,6 +190,20 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
             accountPicked = comboBox1.Text;
             comboBox2.Items.Remove(accountPicked);
+        }
+        private void refreshGraph()
+        {
+            List<Tuple<string, string>> edges = Friends.getEdges();
+            string node1, node2;
+            for (int i = 0; i < edges.Count; i++)
+            {
+                node1 = edges[i].Item1;
+                node2 = edges[i].Item2;
+                graphEdges[node1][node2].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                graphEdges[node1][node2].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                graphEdges[node1][node2].Attr.Color = Microsoft.Msagl.Drawing.Color.Black;
+            }
+            
         }
     }
 }
