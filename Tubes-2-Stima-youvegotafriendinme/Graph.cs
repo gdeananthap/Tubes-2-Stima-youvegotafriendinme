@@ -252,7 +252,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             string toReturn_string = "Daftar rekomendasi teman untuk " + from + "\n";
             foreach (Tuple<int, List<int>> f in toReturn)
             {
-                if (f.Item2.Count > 0)
+                if (f.Item2.Count > 0 && !adjacencyList[nodeIdx[from]].Contains(f.Item1))
                 {
                     toReturn_string += "Nama Akun: " + nodeNames[f.Item1] + "\n";
                     toReturn_string += f.Item2.Count + " mutual friends:" + "\n";
@@ -260,8 +260,8 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     {
                         toReturn_string += nodeNames[acc] + "\n";
                     }
+                    toReturn_string += "\n";
                 }
-                toReturn_string += "\n";
             }
             return toReturn_string;
         }

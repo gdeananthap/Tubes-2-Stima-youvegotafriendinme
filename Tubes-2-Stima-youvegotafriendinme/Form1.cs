@@ -129,7 +129,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 {
                     if(algorithm.Text == "Depth First Search (DFS)")
                     {
-                        label12.Text = "Friend Recommendation with DFS from account " + comboBox1.Text;
+                        label12.Text = label12.Text = Friends.SortedFriendRecommendation(comboBox1.Text,true);
                     }
                     else
                     {
