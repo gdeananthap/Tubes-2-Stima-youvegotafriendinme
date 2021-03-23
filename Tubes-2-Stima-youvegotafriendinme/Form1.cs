@@ -142,16 +142,40 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 {
                     if (algorithm.Text == "Depth First Search (DFS)")
                     {
-                        label12.Text = "Explore friends with DFS from account " + comboBox1.Text+ " to account " + comboBox2.Text;
+                        panel11.Controls.Remove(viewer);
+                        label12.Text = "Explore friends with DFS from account " + comboBox1.Text+ " to account " + comboBox2.Text + "\r\n";
+                        refreshGraph();
+                        string[] path = Friends.ExploreFriendDFS(comboBox1.Text, comboBox2.Text);
+                        label12.Text += path[0] + "\r\n";
+                        for (int i=1; i<path.Length; i++)
+                        {
+                            label12.Text += path[i] + "\r\n";
+                            if (graphEdges[path[i-1]].ContainsKey(path[i]))
+                            {
+                                graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                graphEdges[path[i - 1]][path[i]].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                            }
+                            else
+                            {
+                                graphEdges[path[i]][path[i-1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                graphEdges[path[i]][path[i-1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                            }
+                        }
+                        viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                        viewer.Graph = graph;
+                        viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                        panel11.Controls.Add(viewer);
                     }
                     else
                     {
                         panel11.Controls.Remove(viewer);
-                        label12.Text = "Explore friends with BFS from account " + comboBox1.Text + " to account " + comboBox2.Text;
+                        label12.Text = "Explore friends with BFS from account " + comboBox1.Text + " to account " + comboBox2.Text + "\r\n";
                         refreshGraph();
                         string[] path = Friends.ExploreFriendBFS(comboBox1.Text, comboBox2.Text);
+                        label12.Text += path[0] + "\r\n";
                         for(int i=1; i<path.Length; i++)
                         {
+                            label12.Text += path[i] + "\r\n";
                             if (graphEdges[path[i-1]].ContainsKey(path[i]))
                             {
                                 graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
