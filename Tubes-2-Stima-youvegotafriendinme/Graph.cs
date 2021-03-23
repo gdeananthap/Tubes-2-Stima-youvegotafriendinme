@@ -19,9 +19,9 @@ namespace Tubes_2_Stima_youvegotafriendinme
             List<string> rawSplit = text.Split(delimiterChars).ToList();
             int length = rawSplit.Count;
             List<string> textSplit = new List<string>();
-            for(int i=0; i<length; i++)
+            for (int i = 0; i < length; i++)
             {
-                if(rawSplit[i] != "")
+                if (rawSplit[i] != "")
                 {
                     textSplit.Add(rawSplit[i]);
                 }
@@ -30,16 +30,16 @@ namespace Tubes_2_Stima_youvegotafriendinme
             textSplit.Sort();
             nodeNames = new List<string>();
             nodeNames.Add(textSplit[0]);
-            for(int i=1; i<length; i++)
+            for (int i = 1; i < length; i++)
             {
-                if(textSplit[i] != textSplit[i - 1])
+                if (textSplit[i] != textSplit[i - 1])
                 {
                     nodeNames.Add(textSplit[i]);
                 }
             }
             nodes = nodeNames.Count;
             nodeIdx = new Dictionary<string, int>();
-            for(int i=0; i<nodes; i++)
+            for (int i = 0; i < nodes; i++)
             {
                 nodeIdx.Add(nodeNames[i], i);
             }
@@ -62,14 +62,14 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
             length = textSplit.Count;
             edges = new List<Tuple<string, string>>();
-            for (int i=0; i<length; i += 2)
+            for (int i = 0; i < length; i += 2)
             {
-                adjacencyList[nodeIdx[textSplit[i]]].Add(nodeIdx[textSplit[i+1]]);
-                adjacencyList[nodeIdx[textSplit[i+1]]].Add(nodeIdx[textSplit[i]]);
+                adjacencyList[nodeIdx[textSplit[i]]].Add(nodeIdx[textSplit[i + 1]]);
+                adjacencyList[nodeIdx[textSplit[i + 1]]].Add(nodeIdx[textSplit[i]]);
                 Tuple<string, string> toAdd = new Tuple<string, string>(textSplit[i], textSplit[i + 1]);
                 edges.Add(toAdd);
             }
-            for(int i=0; i<nodes; i++)
+            for (int i = 0; i < nodes; i++)
             {
                 adjacencyList[i].Sort();
             }
@@ -91,7 +91,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             int[] path = BFS(nodeIdx[from], nodeIdx[to]);
             int length = path.Length;
             string[] toReturn = new string[length];
-            for(int i=0; i<length; i++)
+            for (int i = 0; i < length; i++)
             {
                 toReturn[i] = nodeNames[path[i]];
             }
@@ -154,7 +154,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 int count_adj = adjacencyList[current].Count();
                 int temp;
 
-                for (int i=0; i < count_adj; i++)
+                for (int i = 0; i < count_adj; i++)
                 {
                     if (!visitedNodes[to])
                     {
@@ -177,35 +177,35 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 visitedNodes[i] = false;
 
             }
-                int notTaken;
-                int[] path = new int[adjacencyList.Count];
-                Stack<int> stack = new Stack<int>();
-                DFS(from, to, ref visitedNodes, stack);
-                if (stack.Count > 0)
-                {
-                    path = stack.ToArray();
-                    Array.Reverse(path);
-                    return path;
-                }
-                else
-                {
-                    Console.WriteLine("There is no connection");
-                    return path;
-                }
+            int notTaken;
+            int[] path = new int[adjacencyList.Count];
+            Stack<int> stack = new Stack<int>();
+            DFS(from, to, ref visitedNodes, stack);
+            if (stack.Count > 0)
+            {
+                path = stack.ToArray();
+                Array.Reverse(path);
+                return path;
+            }
+            else
+            {
+                Console.WriteLine("There is no connection");
+                return path;
+            }
         }
         public void FriendRecommendationDFS(int from, int depth, List<List<int>> parents)
         {
             int degree = adjacencyList[from].Count;
             if (depth > 1)
             {
-                for(int i=0; i<degree; i++)
+                for (int i = 0; i < degree; i++)
                 {
                     FriendRecommendationDFS(adjacencyList[from][i], depth - 1, parents);
                 }
             }
             else
             {
-                for(int i=0; i<degree; i++)
+                for (int i = 0; i < degree; i++)
                 {
                     parents[adjacencyList[from][i]].Add(from);
                 }
@@ -217,7 +217,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             if (isDFS)
             {
                 List<List<int>> parents = new List<List<int>>();
-                
+
                 for (int i = 0; i < nodes; i++)
                 {
                     List<int> addList = new List<int>();
@@ -227,7 +227,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
 
                 List<Tuple<int, int>> toSort = new List<Tuple<int, int>>();
                 Tuple<int, int> toAdd;
-                for (int i=0; i<nodes; i++)
+                for (int i = 0; i < nodes; i++)
                 {
                     if (i != from)
                     {
@@ -237,7 +237,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 }
                 toSort.Sort();
 
-                for(int i=nodes-2; i>=0 && toSort[i].Item1>0; i--)
+                for (int i = nodes - 2; i >= 0 && toSort[i].Item1 > 0; i--)
                 {
                     int node = -toSort[i].Item2;
                     Tuple<int, List<int>> addReturn = new Tuple<int, List<int>>(node, parents[node]);
@@ -246,14 +246,15 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
             return toReturn;
         }
-        public Dictionary<int, List<int>> FriendRecommendationBFS(int from)
+        public string FriendRecommendationBFS(string from)
         {
-            Dictionary<int, List<int>> result = new Dictionary<int, List<int>>();
+            Dictionary<string, List<string>> result = new Dictionary<string, List<string>>();
+            string printResult = "";
             List<int> accessed = new List<int>();
             List<int> tempFriend = new List<int>();
             List<int> masterFriend = new List<int>();
             int currentNode;
-            masterFriend = getFriendNodes(from);
+            masterFriend = getFriendNodes(nodeIdx[from]);
             List<int> queue = new List<int>(masterFriend);
             while (queue.Count > 0)
             {
@@ -261,37 +262,52 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 tempFriend = getFriendNodes(currentNode);
                 if (masterFriend.Contains(currentNode))
                 {
-                    foreach(int node in tempFriend)
+                    foreach (int node in tempFriend)
                     {
-                        if (!(accessed.Contains(node)) && !(queue.Contains(node)) && (node != from))
+                        if (!(accessed.Contains(node)) && !(queue.Contains(node)) && (node != nodeIdx[from]))
                         {
                             queue.Add(node);
                         }
                     }
-                    
+
                 }
                 else
                 {
-                    List<int> recommended = new List<int>();
-                    foreach(int node in tempFriend)
+                    List<string> recommended = new List<string>();
+                    foreach (int node in tempFriend)
                     {
                         if (masterFriend.Contains(node))
                         {
-                            recommended.Add(node);
+                            recommended.Add(nodeNames[node]);
                         }
-                        if (!(accessed.Contains(node)) && !(queue.Contains(node)) && (node != from))
+                        if (!(accessed.Contains(node)) && !(queue.Contains(node)) && (node != nodeIdx[from]))
                         {
                             queue.Add(node);
                         }
                     }
-                    result.Add(currentNode, recommended);
+                    result.Add(nodeNames[currentNode], recommended);
                 }
                 accessed.Add(currentNode);
                 queue.Remove(currentNode);
             }
-           
-            return result;
+
+            var sortedResult = (from val in result orderby val.Value.Count descending select val);
+            printResult += ("Daftar rekomendasi teman untuk " + from +" \n");
+            foreach (KeyValuePair<string, List<string>> f in sortedResult)
+            {
+                if (f.Value.Count > 0)
+                {
+                    printResult += ("Nama Akun: " + f.Key + " \n");
+                    printResult += (f.Value.Count.ToString()+" mutual friends:\n");
+                    foreach (string acc in f.Value)
+                    {
+                        printResult += (acc + "\n");
+                    }
+                    printResult += "\n";
+                }
+
+            }
+            return printResult;
         }
     }
-    
 }

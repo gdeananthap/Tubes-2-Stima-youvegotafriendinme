@@ -133,7 +133,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     }
                     else
                     {
-                        label12.Text = "Friend Recommendation with BFS from account " + comboBox1.Text;
+                        label12.Text = Friends.FriendRecommendationBFS(comboBox1.Text);
                     }
                 }
             }
