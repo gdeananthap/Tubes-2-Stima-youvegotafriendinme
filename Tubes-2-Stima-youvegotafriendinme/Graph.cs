@@ -169,7 +169,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
 
         }
-        public int[] ExploreFriendDFS(int from, int to)
+        public string[] ExploreFriendDFS(string from, string to)
         {
             bool[] visitedNodes = new bool[nodes];
             for (int i = 0; i < nodes; i++)
@@ -177,20 +177,24 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 visitedNodes[i] = false;
 
             }
-            int notTaken;
-            int[] path = new int[adjacencyList.Count];
             Stack<int> stack = new Stack<int>();
-            DFS(from, to, ref visitedNodes, stack);
+            DFS(nodeIdx[from], nodeIdx[to], ref visitedNodes, stack);
+            int[] path = new int[stack.Count];
+            string[] path_string = new string[stack.Count];
             if (stack.Count > 0)
             {
                 path = stack.ToArray();
                 Array.Reverse(path);
-                return path;
+                for (int i = 0; i < path.Count(); i++)
+                {
+                    path_string[i] = nodeNames[path[i]];
+                }
+                return path_string;
             }
             else
             {
-                Console.WriteLine("There is no connection");
-                return path;
+                Console.WriteLine("Tidak ada jalur koneksi yang tersedia \n Anda harus memulai koneksi baru itu sendiri.");
+                return path_string;
             }
         }
         public void FriendRecommendationDFS(int from, int depth, List<List<int>> parents)
@@ -211,7 +215,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 }
             }
         }
-        public List<Tuple<int, List<int>>> SortedFriendRecommendation(int from, bool isDFS)
+        public string SortedFriendRecommendation(int from, bool isDFS)
         {
             List<Tuple<int, List<int>>> toReturn = new List<Tuple<int, List<int>>>();
             if (isDFS)
@@ -244,7 +248,22 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     toReturn.Add(addReturn);
                 }
             }
-            return toReturn;
+            int NBRecommend = toReturn.Count;
+            string toReturn_string = "Daftar rekomendasi teman untuk " + nodeNames[from] + "\n";
+            foreach (Tuple<int, List<int>> f in toReturn)
+            {
+                if (f.Item2.Count > 0)
+                {
+                    toReturn_string += "Nama Akun: " + nodeNames[f.Item1] + "\n";
+                    toReturn_string += f.Item2.Count + " mutual friends:" + "\n";
+                    foreach (int acc in f.Item2)
+                    {
+                        toReturn_string += nodeNames[acc] + "\n";
+                    }
+                }
+                toReturn_string += "\n";
+            }
+            return toReturn_string;
         }
         public string FriendRecommendationBFS(string from)
         {
