@@ -215,7 +215,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 }
             }
         }
-        public string SortedFriendRecommendation(int from, bool isDFS)
+        public string SortedFriendRecommendation(string from, bool isDFS)
         {
             List<Tuple<int, List<int>>> toReturn = new List<Tuple<int, List<int>>>();
             if (isDFS)
@@ -227,13 +227,13 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     List<int> addList = new List<int>();
                     parents.Add(addList);
                 }
-                FriendRecommendationDFS(from, 2, parents);
+                FriendRecommendationDFS(nodeIdx[from], 2, parents);
 
                 List<Tuple<int, int>> toSort = new List<Tuple<int, int>>();
                 Tuple<int, int> toAdd;
                 for (int i = 0; i < nodes; i++)
                 {
-                    if (i != from)
+                    if (i != nodeIdx[from])
                     {
                         toAdd = new Tuple<int, int>(parents[i].Count, -i);
                         toSort.Add(toAdd);
@@ -249,7 +249,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 }
             }
             int NBRecommend = toReturn.Count;
-            string toReturn_string = "Daftar rekomendasi teman untuk " + nodeNames[from] + "\n";
+            string toReturn_string = "Daftar rekomendasi teman untuk " + from + "\n";
             foreach (Tuple<int, List<int>> f in toReturn)
             {
                 if (f.Item2.Count > 0)
