@@ -335,7 +335,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
             if (countFriends == 0)
             {
-                printResult += "There is no friends recommendation for " + from + " \n";
+                printResult += "There is no friends recommendation for  " + from + " \n";
             }
             return printResult;
         }
