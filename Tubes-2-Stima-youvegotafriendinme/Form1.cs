@@ -41,19 +41,21 @@ namespace Tubes_2_Stima_youvegotafriendinme
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                panel11.Controls.Remove(viewer);
                 label11.Text = openFileDialog1.SafeFileName;
                 filename = openFileDialog1.FileName;
                 filecontent = File.ReadAllText(filename);
                 richTextBox1.Text = "";
+                //create a graph object 
                 Friends = new Graph(filecontent);
                 List<string> nodeNames = Friends.getNodeNames();
-                for(int i=0; i<nodeNames.Count; i++)
+                comboBox1.Items.Clear();
+                comboBox2.Items.Clear();
+                for (int i=0; i<nodeNames.Count; i++)
                 {
                     comboBox1.Items.Add(nodeNames[i]);
                     comboBox2.Items.Add(nodeNames[i]);
                 }
-                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                //create a graph object 
                 //create the graph content 
                 graph = new Microsoft.Msagl.Drawing.Graph("graph");
                 List<Tuple<string, string>> edges = Friends.getEdges();
@@ -71,16 +73,8 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     graphEdges[node1].Add(node2, graph.AddEdge(node1, node2));
                     graphEdges[node1][node2].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
                 }
-                /*graph.AddEdge("B", "C");
-                graph.AddEdge("A", C).Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-
-                graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
-                graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
-                Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
-                c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
-                c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
-                */
-                //bind the graph to the viewer 
+                //bind the graph to the viewer
+                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
                 viewer.Graph = graph;
                 //associate the viewer with the form 
                 //form.SuspendLayout();
@@ -119,10 +113,9 @@ namespace Tubes_2_Stima_youvegotafriendinme
                         if (path.Length > 0)
                         {
                             int degree = path.Length - 2;
-                            if (degree == 0)
+                            if (graphEdges[comboBox1.Text].ContainsKey(comboBox2.Text) || graphEdges[comboBox2.Text].ContainsKey(comboBox1.Text))
                             {
                                 richTextBox1.Text += "Both of them are already friends\n";
-                                panel11.Controls.Add(viewer);
                             }
                             else
                             {
@@ -161,11 +154,11 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                         graphEdges[path[i]][path[i - 1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
                                     }
                                 }
-                                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                                viewer.Graph = graph;
-                                viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-                                panel11.Controls.Add(viewer);
                             }
+                            viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                            viewer.Graph = graph;
+                            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                            panel11.Controls.Add(viewer);
                         }
                         else
                         {
@@ -185,7 +178,6 @@ namespace Tubes_2_Stima_youvegotafriendinme
                             if (degree == 0)
                             {
                                 richTextBox1.Text += "Both of them are already friends\n";
-                                panel11.Controls.Add(viewer);
                             }
                             else
                             {
@@ -224,11 +216,11 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                         graphEdges[path[i]][path[i - 1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
                                     }
                                 }
-                                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                                viewer.Graph = graph;
-                                viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-                                panel11.Controls.Add(viewer);
                             }
+                            viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                            viewer.Graph = graph;
+                            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                            panel11.Controls.Add(viewer);
                         }
                         else
                         {
