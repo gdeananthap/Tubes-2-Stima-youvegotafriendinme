@@ -249,12 +249,14 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 }
             }
             int NBRecommend = toReturn.Count;
-            string toReturn_string = "Daftar rekomendasi teman untuk " + from + "\n";
+            int countFriends = 0;
+            string toReturn_string = ("Friends recommendation for " + from + " with DFS Algorithm\n");
             foreach (Tuple<int, List<int>> f in toReturn)
             {
                 if (f.Item2.Count > 0 && !adjacencyList[nodeIdx[from]].Contains(f.Item1))
                 {
-                    toReturn_string += "Nama Akun: " + nodeNames[f.Item1] + "\n";
+                    countFriends++;
+                    toReturn_string += "Account name: " + nodeNames[f.Item1] + "\n";
                     toReturn_string += f.Item2.Count + " mutual friends:" + "\n";
                     foreach (int acc in f.Item2)
                     {
@@ -262,6 +264,10 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     }
                     toReturn_string += "\n";
                 }
+            }
+            if (countFriends == 0)
+            {
+                toReturn_string += "There is no friends recommendation for " + from + " \n";
             }
             return toReturn_string;
         }
@@ -311,20 +317,25 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
 
             var sortedResult = (from val in result orderby val.Value.Count descending select val);
-            printResult += ("Daftar rekomendasi teman untuk " + from +" \n");
+            int countFriends = 0;
+            printResult += ("Friends recommendation for " + from +" with BFS Algorithm\n");
             foreach (KeyValuePair<string, List<string>> f in sortedResult)
             {
                 if (f.Value.Count > 0)
                 {
-                    printResult += ("Nama Akun: " + f.Key + " \n");
-                    printResult += (f.Value.Count.ToString()+" mutual friends:\n");
+                    countFriends++;
+                    printResult += ("Account name: " + f.Key + " \n");
+                    printResult += (f.Value.Count.ToString() + " mutual friends:\n");
                     foreach (string acc in f.Value)
                     {
                         printResult += (acc + "\n");
                     }
                     printResult += "\n";
                 }
-
+            }
+            if (countFriends == 0)
+            {
+                printResult += "There is no friends recommendation for " + from + " \n";
             }
             return printResult;
         }

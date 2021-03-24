@@ -27,40 +27,10 @@ namespace Tubes_2_Stima_youvegotafriendinme
             InitializeComponent();
         }
 
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    openFileDialog1.ShowDialog();
-        //    string filename = openFileDialog1.FileName;
-        //    string readfile = File.ReadAllText(filename);
-        //    //richTextBox1.Text = readfile;
-        //}
-
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
-
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-        //    //create a graph object 
-        //    Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
-        //    //create the graph content 
-        //    graph.AddEdge("A", "B").Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
-        //    graph.AddEdge("B", "C");
-        //    graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-        //    graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
-        //    graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
-        //    Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
-        //    c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
-        //    c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
-        //    //bind the graph to the viewer 
-        //    viewer.Graph = graph;
-        //    //associate the viewer with the form 
-        //    //form.SuspendLayout();
-        //    viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-        //    panel1.Controls.Add(viewer);
-        //}
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
@@ -74,7 +44,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 label11.Text = openFileDialog1.SafeFileName;
                 filename = openFileDialog1.FileName;
                 filecontent = File.ReadAllText(filename);
-                label12.Text = "";
+                richTextBox1.Text = "";
                 Friends = new Graph(filecontent);
                 List<string> nodeNames = Friends.getNodeNames();
                 for(int i=0; i<nodeNames.Count; i++)
@@ -129,11 +99,11 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 {
                     if(algorithm.Text == "Depth First Search (DFS)")
                     {
-                        label12.Text = label12.Text = Friends.SortedFriendRecommendation(comboBox1.Text,true);
+                        richTextBox1.Text = Friends.SortedFriendRecommendation(comboBox1.Text,true);
                     }
                     else
                     {
-                        label12.Text = Friends.FriendRecommendationBFS(comboBox1.Text);
+                        richTextBox1.Text = Friends.FriendRecommendationBFS(comboBox1.Text);
                     }
                 }
             }
@@ -143,56 +113,129 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     if (algorithm.Text == "Depth First Search (DFS)")
                     {
                         panel11.Controls.Remove(viewer);
-                        label12.Text = "Explore friends with DFS from account " + comboBox1.Text+ " to account " + comboBox2.Text + "\r\n";
+                        richTextBox1.Text = "Explore friends with DFS from account " + comboBox1.Text + " to account " + comboBox2.Text + "\r\n";
                         refreshGraph();
                         string[] path = Friends.ExploreFriendDFS(comboBox1.Text, comboBox2.Text);
-                        label12.Text += path[0] + "\r\n";
-                        for (int i=1; i<path.Length; i++)
+                        if (path.Length > 0)
                         {
-                            label12.Text += path[i] + "\r\n";
-                            if (graphEdges[path[i-1]].ContainsKey(path[i]))
+                            int degree = path.Length - 2;
+                            if (degree == 0)
                             {
-                                graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                                graphEdges[path[i - 1]][path[i]].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                richTextBox1.Text += "Both of them are already friends\n";
+                                panel11.Controls.Add(viewer);
                             }
                             else
                             {
-                                graphEdges[path[i]][path[i-1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                                graphEdges[path[i]][path[i-1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                if (degree % 10 == 1 && !(degree > 10 && degree < 20))
+                                {
+                                    richTextBox1.Text += degree.ToString() + "st-degree-connection\n";
+                                }
+                                else if (degree % 10 == 2 && !(degree > 10 && degree < 20))
+                                {
+                                    richTextBox1.Text += degree.ToString() + "nd-degree-connection\n";
+                                }
+                                else if (degree % 10 == 3 && !(degree > 10 && degree < 20))
+                                {
+                                    richTextBox1.Text += degree.ToString() + "rd-degree-connection\n";
+                                }
+                                else
+                                {
+                                    richTextBox1.Text += degree.ToString() + "th-degree-connection\n";
+                                }
+                                richTextBox1.Text += path[0] + " -> ";
+                                for (int i = 1; i < path.Length; i++)
+                                {
+                                    richTextBox1.Text += path[i];
+                                    if (i != path.Length - 1)
+                                    {
+                                        richTextBox1.Text += " -> ";
+                                    }
+                                    if (graphEdges[path[i - 1]].ContainsKey(path[i]))
+                                    {
+                                        graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                        graphEdges[path[i - 1]][path[i]].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                    }
+                                    else
+                                    {
+                                        graphEdges[path[i]][path[i - 1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                        graphEdges[path[i]][path[i - 1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                    }
+                                }
+                                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                                viewer.Graph = graph;
+                                viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                                panel11.Controls.Add(viewer);
                             }
                         }
-                        viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                        viewer.Graph = graph;
-                        viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-                        panel11.Controls.Add(viewer);
+                        else
+                        {
+                            panel11.Controls.Add(viewer);
+                            richTextBox1.Text += "There isn't any connection available\nYou have to start the new connection itself";
+                        }
                     }
                     else
                     {
                         panel11.Controls.Remove(viewer);
-                        label12.Text = "Explore friends with BFS from account " + comboBox1.Text + " to account " + comboBox2.Text + "\r\n";
+                        richTextBox1.Text = "Explore friends with BFS from account " + comboBox1.Text + " to account " + comboBox2.Text + "\r\n";
                         refreshGraph();
                         string[] path = Friends.ExploreFriendBFS(comboBox1.Text, comboBox2.Text);
-                        label12.Text += path[0] + "\r\n";
-                        for(int i=1; i<path.Length; i++)
+                        if (path.Length > 0)
                         {
-                            label12.Text += path[i] + "\r\n";
-                            if (graphEdges[path[i-1]].ContainsKey(path[i]))
+                            int degree = path.Length - 2;
+                            if (degree == 0)
                             {
-                                graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                                graphEdges[path[i - 1]][path[i]].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                richTextBox1.Text += "Both of them are already friends\n";
+                                panel11.Controls.Add(viewer);
                             }
                             else
                             {
-                                graphEdges[path[i]][path[i-1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                                graphEdges[path[i]][path[i-1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                if (degree % 10 == 1 && !(degree > 10 && degree < 20))
+                                {
+                                    richTextBox1.Text += degree.ToString() + "st-degree-connection\n";
+                                }
+                                else if (degree % 10 == 2 && !(degree > 10 && degree < 20))
+                                {
+                                    richTextBox1.Text += degree.ToString() + "nd-degree-connection\n";
+                                }
+                                else if (degree % 10 == 3 && !(degree > 10 && degree < 20))
+                                {
+                                    richTextBox1.Text += degree.ToString() + "rd-degree-connection\n";
+                                }
+                                else
+                                {
+                                    richTextBox1.Text += degree.ToString() + "th-degree-connection\n";
+                                }
+                                richTextBox1.Text += path[0] + " -> ";
+                                for (int i = 1; i < path.Length; i++)
+                                {
+                                    richTextBox1.Text += path[i];
+                                    if (i != path.Length - 1)
+                                    {
+                                        richTextBox1.Text += " -> ";
+                                    }
+                                    if (graphEdges[path[i - 1]].ContainsKey(path[i]))
+                                    {
+                                        graphEdges[path[i - 1]][path[i]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                        graphEdges[path[i - 1]][path[i]].Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                    }
+                                    else
+                                    {
+                                        graphEdges[path[i]][path[i - 1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                                        graphEdges[path[i]][path[i - 1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
+                                    }
+                                }
+                                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                                viewer.Graph = graph;
+                                viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                                panel11.Controls.Add(viewer);
                             }
                         }
-                        viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                        viewer.Graph = graph;
-                        viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-                        panel11.Controls.Add(viewer);
+                        else
+                        {
+                            panel11.Controls.Add(viewer);
+                            richTextBox1.Text += "There isn't any connection available\nYou have to start the new connection itself";
+                        }
                     }
-                        
                 }
             }
         }
