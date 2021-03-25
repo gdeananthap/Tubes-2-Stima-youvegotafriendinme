@@ -247,29 +247,34 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     Tuple<int, List<int>> addReturn = new Tuple<int, List<int>>(node, parents[node]);
                     toReturn.Add(addReturn);
                 }
-            }
-            int NBRecommend = toReturn.Count;
-            int countFriends = 0;
-            string toReturn_string = ("Friends recommendation for " + from + " with DFS Algorithm\n");
-            foreach (Tuple<int, List<int>> f in toReturn)
-            {
-                if (f.Item2.Count > 0 && !adjacencyList[nodeIdx[from]].Contains(f.Item1))
+
+                int NBRecommend = toReturn.Count;
+                int countFriends = 0;
+                string toReturn_string = ("Friends recommendation for " + from + " with DFS Algorithm\n");
+                foreach (Tuple<int, List<int>> f in toReturn)
                 {
-                    countFriends++;
-                    toReturn_string += "Account name: " + nodeNames[f.Item1] + "\n";
-                    toReturn_string += f.Item2.Count + " mutual friends:" + "\n";
-                    foreach (int acc in f.Item2)
+                    if (f.Item2.Count > 0 && !adjacencyList[nodeIdx[from]].Contains(f.Item1))
                     {
-                        toReturn_string += nodeNames[acc] + "\n";
+                        countFriends++;
+                        toReturn_string += "Account name: " + nodeNames[f.Item1] + "\n";
+                        toReturn_string += f.Item2.Count + " mutual friends:" + "\n";
+                        foreach (int acc in f.Item2)
+                        {
+                            toReturn_string += nodeNames[acc] + "\n";
+                        }
+                        toReturn_string += "\n";
                     }
-                    toReturn_string += "\n";
                 }
+                if (countFriends == 0)
+                {
+                    toReturn_string += "There is no friends recommendation for " + from + " \n";
+                }
+                return toReturn_string;
             }
-            if (countFriends == 0)
+            else
             {
-                toReturn_string += "There is no friends recommendation for " + from + " \n";
+                return FriendRecommendationBFS(from);
             }
-            return toReturn_string;
         }
         public string FriendRecommendationBFS(string from)
         {

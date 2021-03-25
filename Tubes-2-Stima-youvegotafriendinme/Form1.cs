@@ -97,7 +97,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     }
                     else
                     {
-                        richTextBox1.Text = Friends.FriendRecommendationBFS(comboBox1.Text);
+                        richTextBox1.Text = Friends.SortedFriendRecommendation(comboBox1.Text, false);
                     }
                 }
             }
@@ -136,6 +136,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                     richTextBox1.Text += degree.ToString() + "th-degree-connection\n";
                                 }
                                 richTextBox1.Text += path[0] + " -> ";
+                                graph.FindNode(path[0]).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                                 for (int i = 1; i < path.Length; i++)
                                 {
                                     richTextBox1.Text += path[i];
@@ -153,6 +154,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                         graphEdges[path[i]][path[i - 1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
                                         graphEdges[path[i]][path[i - 1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
                                     }
+                                    graph.FindNode(path[i]).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                                 }
                             }
                         }
@@ -191,6 +193,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                     richTextBox1.Text += degree.ToString() + "th-degree-connection\n";
                                 }
                                 richTextBox1.Text += path[0] + " -> ";
+                                graph.FindNode(path[0]).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                                 for (int i = 1; i < path.Length; i++)
                                 {
                                     richTextBox1.Text += path[i];
@@ -208,6 +211,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                         graphEdges[path[i]][path[i - 1]].Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
                                         graphEdges[path[i]][path[i - 1]].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.Normal;
                                     }
+                                    graph.FindNode(path[i]).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                                 }
                             }
                         }
@@ -254,7 +258,12 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 graphEdges[node1][node2].Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
                 graphEdges[node1][node2].Attr.Color = Microsoft.Msagl.Drawing.Color.Black;
             }
-            
+            List<string> nodeNames = Friends.getNodeNames();
+            for(int i=0; i<nodeNames.Count; i++)
+            {
+                graph.FindNode(nodeNames[i]).Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+            }
+
         }
     }
 }
