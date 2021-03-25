@@ -156,13 +156,16 @@ namespace Tubes_2_Stima_youvegotafriendinme
         }
         public void DFS(int current, int to, ref bool[] visitedNodes, Stack<int> stack)
         {
+
+            //Periksa apakah nodes sekarang sudah dikunjungi
             if (!visitedNodes[current])
             {
+                // set nodesnya sudah di-visit, dan push ke stack untuk mencatat nodes yang dilalui
                 visitedNodes[current] = true;
                 stack.Push(current);
                 int count_adj = adjacencyList[current].Count();
                 int temp;
-
+                //Kunjungi tetangga dari current nodes apabila belum mencapai node tujuan (rekursif)
                 for (int i = 0; i < count_adj; i++)
                 {
                     if (!visitedNodes[to])
@@ -171,6 +174,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                         DFS(temp, to, ref visitedNodes, stack);
                     }
                 }
+                //Jika tidak mencapai nodes tujuan, di pop dari stack
                 if (!visitedNodes[to])
                 {
                     temp = stack.Pop();
@@ -180,6 +184,11 @@ namespace Tubes_2_Stima_youvegotafriendinme
         }
         public string[] ExploreFriendDFS(string from, string to)
         {
+            // I.S. from adalah akun/node asal dan to adalah akun/node tujuan
+            // F.S. Mengembalikan array of string yang berisi akun-akun yang dilalui untuk
+            // mencapai akun tujuan
+
+            //Inisialisasi visitedNodes menjadi false
             bool[] visitedNodes = new bool[nodes];
             for (int i = 0; i < nodes; i++)
             {
@@ -187,9 +196,12 @@ namespace Tubes_2_Stima_youvegotafriendinme
 
             }
             Stack<int> stack = new Stack<int>();
+            //Pemanggilan Fungsi DFS (Rekursif)
             DFS(nodeIdx[from], nodeIdx[to], ref visitedNodes, stack);
+            //Inisialisasi array int dan string sebesar jumlah nodes dalam stack
             int[] path = new int[stack.Count];
             string[] path_string = new string[stack.Count];
+            // Pindahkan isi stack ke array of int, dari array of int ke array of string
             if (stack.Count > 0)
             {
                 path = stack.ToArray();
@@ -202,7 +214,6 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
             else
             {
-                Console.WriteLine("Tidak ada jalur koneksi yang tersedia \n Anda harus memulai koneksi baru itu sendiri.");
                 return path_string;
             }
         }
