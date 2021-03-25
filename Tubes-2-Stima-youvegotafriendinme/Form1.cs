@@ -104,11 +104,11 @@ namespace Tubes_2_Stima_youvegotafriendinme
             else { 
                 if(comboBox1.Text != "" && comboBox2.Text != "")
                 {
+                    panel11.Controls.Remove(viewer);
+                    refreshGraph();
                     if (algorithm.Text == "Depth First Search (DFS)")
                     {
-                        panel11.Controls.Remove(viewer);
                         richTextBox1.Text = "Explore friends with DFS from account " + comboBox1.Text + " to account " + comboBox2.Text + "\r\n";
-                        refreshGraph();
                         string[] path = Friends.ExploreFriendDFS(comboBox1.Text, comboBox2.Text);
                         if (path.Length > 0)
                         {
@@ -155,22 +155,15 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                     }
                                 }
                             }
-                            viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                            viewer.Graph = graph;
-                            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-                            panel11.Controls.Add(viewer);
                         }
                         else
                         {
-                            panel11.Controls.Add(viewer);
                             richTextBox1.Text += "There isn't any connection available\nYou have to start the new connection itself";
                         }
                     }
                     else
                     {
-                        panel11.Controls.Remove(viewer);
                         richTextBox1.Text = "Explore friends with BFS from account " + comboBox1.Text + " to account " + comboBox2.Text + "\r\n";
-                        refreshGraph();
                         string[] path = Friends.ExploreFriendBFS(comboBox1.Text, comboBox2.Text);
                         if (path.Length > 0)
                         {
@@ -217,17 +210,16 @@ namespace Tubes_2_Stima_youvegotafriendinme
                                     }
                                 }
                             }
-                            viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                            viewer.Graph = graph;
-                            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-                            panel11.Controls.Add(viewer);
                         }
                         else
                         {
-                            panel11.Controls.Add(viewer);
                             richTextBox1.Text += "There isn't any connection available\nYou have to start the new connection itself";
                         }
                     }
+                    viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                    viewer.Graph = graph;
+                    viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                    panel11.Controls.Add(viewer);
                 }
             }
         }
