@@ -76,16 +76,25 @@ namespace Tubes_2_Stima_youvegotafriendinme
         }
         public List<int> getFriendNodes(int from)
         {
+            // I.S. from adalah salah satu nodes dari graf
+            // F.S. mengembalikan list of ID account yang berhubungan langsung dengan from
             return adjacencyList[from];
         }
+        
         public List<string> getNodeNames()
         {
+            // I.S. Graph terdefinisi
+            // F.S. Mengembalikan list of nama account yang ada di graph
             return nodeNames;
         }
+
         public List<Tuple<string, string>> getEdges()
         {
+            // I.S. Graph terdefinisi
+            // F.S. Mengembalikan list of tuple akun-akun yang bersisian di graph
             return edges;
         }
+        
         public string[] ExploreFriendBFS(string from, string to)
         {
             int[] path = BFS(nodeIdx[from], nodeIdx[to]);
@@ -278,20 +287,33 @@ namespace Tubes_2_Stima_youvegotafriendinme
         }
         public string FriendRecommendationBFS(string from)
         {
-            Dictionary<string, List<string>> result = new Dictionary<string, List<string>>();
-            string printResult = "";
-            List<int> accessed = new List<int>();
-            List<int> tempFriend = new List<int>();
-            List<int> masterFriend = new List<int>();
-            int currentNode;
-            masterFriend = getFriendNodes(nodeIdx[from]);
-            List<int> queue = new List<int>(masterFriend);
+            // I.S. from adalah salah satu akun yang ada di graf
+            // F.S. Mengembalikan string yang merepresentasikan hasil pencarian Friend Recommendation jika ditemukan.
+            // Jika tidak ditemukan, akan mengembalikan pesan kesalahan
+
+
+            // Inisialisasi variabel-variabel
+            Dictionary<string, List<string>> result = new Dictionary<string, List<string>>(); //Map dengan key adalah akun yang memiliki mutual friends dengan from dan valuenya adalah List of mutual friends
+            string printResult = "";  // Variabel untuk menyimpan 
+            List<int> accessed = new List<int>(); // List untuk menyimpan akun mana saja yang sudah dikunjungi
+            List<int> tempFriend = new List<int>(); // List untuk menyimpan akun mana saja yang berteman dengan currentNode
+            List<int> masterFriend = new List<int>(); // List untuk menyimpan akun apa saja yang berteman dengan from
+            int currentNode; // Akun yang sedang di cek
+
+            masterFriend = getFriendNodes(nodeIdx[from]); 
+            List<int> queue = new List<int>(masterFriend); // List untuk menyimpan daftar kandidat akun yang dijadikan friend recommendation
+            
+            // Iterasi selama antrian tidak kosong
             while (queue.Count > 0)
             {
+                // Ambil akun pertama dari antrian
                 currentNode = queue[0];
+                // Cari teman dari akun currentNode
                 tempFriend = getFriendNodes(currentNode);
                 if (masterFriend.Contains(currentNode))
                 {
+                    // Jika currentNode merupakan teman dari from maka tambahkan semua teman currentNode ke queue
+                    // jika belum terdaftar pada antrian, belum pernah dikunjungi, dan tidak sama dengan from
                     foreach (int node in tempFriend)
                     {
                         if (!(accessed.Contains(node)) && !(queue.Contains(node)) && (node != nodeIdx[from]))
@@ -303,26 +325,35 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 }
                 else
                 {
-                    List<string> recommended = new List<string>();
+                    // Jika currentNode bukan teman
+                    List<string> recommended = new List<string>(); // List untuk menyimpan mutual friends dari currentNode
                     foreach (int node in tempFriend)
                     {
                         if (masterFriend.Contains(node))
                         {
+                            // Mutual Friends
                             recommended.Add(nodeNames[node]);
                         }
                         if (!(accessed.Contains(node)) && !(queue.Contains(node)) && (node != nodeIdx[from]))
                         {
+                            // Tambahkan ke antrian jika belum terdaftar pada antrian, belum pernah dikunjungi, dan tidak sama dengan from
                             queue.Add(node);
                         }
                     }
+                    // Tambahkan ke Map result dengan key currentNode dan value mutual friends
                     result.Add(nodeNames[currentNode], recommended);
                 }
+                // Tandai bahwa currentNode sudah pernah dikunjungi dan hilangkan dari antrian
                 accessed.Add(currentNode);
                 queue.Remove(currentNode);
             }
+            // {endwhile}
 
+            // Urutkan hasil pencarian berdasarkan banyaknya mutual friends
             var sortedResult = (from val in result orderby val.Value.Count descending select val);
-            int countFriends = 0;
+            int countFriends = 0; // Variabel yang menyimpan total teman yang direkomendasikan
+
+            // Formatting result untuk friends recommendation
             printResult += ("Friends recommendation for " + from +" with BFS Algorithm\n");
             foreach (KeyValuePair<string, List<string>> f in sortedResult)
             {
@@ -340,6 +371,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             }
             if (countFriends == 0)
             {
+                // Tidak ada rekomendasi teman untuk from
                 printResult += "There is no friends recommendation for  " + from + " \n";
             }
             return printResult;
