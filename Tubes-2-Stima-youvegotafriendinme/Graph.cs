@@ -97,6 +97,9 @@ namespace Tubes_2_Stima_youvegotafriendinme
         
         public string[] ExploreFriendBFS(string from, string to)
         {
+            //Fungsi ini pada dasarnya hanya mengubah parameter string ke ID node, 
+            //Menyelesaikan permasalahan pencarian jalur dengan BFS yang memberikan solusi barisan bilangan,
+            //Dan mengkonversikan kembali menjadi barisan string
             int[] path = BFS(nodeIdx[from], nodeIdx[to]);
             int length = path.Length;
             string[] toReturn = new string[length];
@@ -108,12 +111,14 @@ namespace Tubes_2_Stima_youvegotafriendinme
         }
         public int[] BFS(int from, int to)
         {
+            //Inisialisasi array backtrack dan kedalaman, backtrack[node] bernilai -1 jika node belum dikunjungi
             int[] backtrack = new int[nodes];
             int[] depth = new int[nodes];
             for (int i = 0; i < nodes; i++)
             {
                 backtrack[i] = -1;
             }
+            //Inisialisasi Queue dan memasukkan sourcenode ke dalamnya
             Queue<int> queue = new Queue<int>();
             int head, degree, visitedNode;
             queue.Enqueue(from);
@@ -121,6 +126,9 @@ namespace Tubes_2_Stima_youvegotafriendinme
             depth[from] = 0;
             while (backtrack[to] == -1 && queue.Count > 0)
             {
+                //Selama queue masih ada dan tujuan belum dikunjungi,
+                //tiap iterasi dalam while akan mengambil semua teman dari node terdepan dalam antrian,
+                //jika belum dikunjungi akan dimasukkan ke dalam queue lagi
                 head = queue.Dequeue();
                 degree = adjacencyList[head].Count;
                 for (int i = 0; i < degree; i++)
@@ -136,7 +144,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
 
             }
 
-            if (backtrack[to] != -1)
+            if (backtrack[to] != -1) //Tujuan tercapai, terdapat jalur yang menghubungkan from ke to
             {
                 int[] path = new int[depth[to] + 1];
                 visitedNode = to;
@@ -148,7 +156,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 path[0] = visitedNode;
                 return path;
             }
-            else
+            else //from dan to tidak terhubung
             {
                 int[] path = new int[0];
                 return path;
@@ -219,15 +227,16 @@ namespace Tubes_2_Stima_youvegotafriendinme
         }
         public void FriendRecommendationDFS(int from, int depth, List<List<int>> parents)
         {
+            //Merupakan fungsi berbasis rekursif yang memperbarui nilai parent dengan menambahkan dari node mana saja suatu node dapat tercapai
             int degree = adjacencyList[from].Count;
-            if (depth > 1)
+            if (depth > 1) //Belum merupakan leaf dari recursive tree
             {
                 for (int i = 0; i < degree; i++)
                 {
                     FriendRecommendationDFS(adjacencyList[from][i], depth - 1, parents);
                 }
             }
-            else
+            else //Ujung recursive tree, akan menambahkan node ini ke dalam list parent tiap temannya
             {
                 for (int i = 0; i < degree; i++)
                 {
@@ -240,6 +249,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
             List<Tuple<int, List<int>>> toReturn = new List<Tuple<int, List<int>>>();
             if (isDFS)
             {
+                //inisialisasi list of list of integer bernama parent
                 List<List<int>> parents = new List<List<int>>();
 
                 for (int i = 0; i < nodes; i++)
@@ -247,20 +257,26 @@ namespace Tubes_2_Stima_youvegotafriendinme
                     List<int> addList = new List<int>();
                     parents.Add(addList);
                 }
+                //mengisi parent
                 FriendRecommendationDFS(nodeIdx[from], 2, parents);
-
+                //Sorting agar dihasilkan indeks node terurut berdasarkan banyaknya common friends
                 List<Tuple<int, int>> toSort = new List<Tuple<int, int>>();
                 Tuple<int, int> toAdd;
                 for (int i = 0; i < nodes; i++)
                 {
+                    //Dilakukan filter untuk memastikan bahwa node ini memamng bukan node awal
                     if (i != nodeIdx[from])
                     {
+                        
                         toAdd = new Tuple<int, int>(parents[i].Count, -i);
                         toSort.Add(toAdd);
                     }
                 }
+                //Sorting memanfaatkan komparator antar tuple, 
+                //oleh karena itu dimasukkan salah satu negatif agar terurut menaik berdasar common friends dan menurun berdasar abjad
                 toSort.Sort();
 
+                //Dilakukan pembalikan
                 for (int i = nodes - 2; i >= 0 && toSort[i].Item1 > 0; i--)
                 {
                     int node = -toSort[i].Item2;
@@ -273,6 +289,7 @@ namespace Tubes_2_Stima_youvegotafriendinme
                 string toReturn_string = ("Friends recommendation for " + from + " with DFS Algorithm\n");
                 foreach (Tuple<int, List<int>> f in toReturn)
                 {
+                    //Dilakukan filter lagi untuk memastikan bahwa node ini tidak berteman dengan node awal
                     if (f.Item2.Count > 0 && !adjacencyList[nodeIdx[from]].Contains(f.Item1))
                     {
                         countFriends++;
