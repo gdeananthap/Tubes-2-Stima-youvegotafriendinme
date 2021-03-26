@@ -44,7 +44,7 @@ Sebelum menjalankan aplikasi, pastikan Anda sudah melakukan download atau clone 
 ## How To Use
 1. Jalankan aplikasi you'vegotafriendinme (via file solution atau via executable code)
 2. Jika aplikasi berhasil dijalankan, akan ditampilkan menu utama dari aplikasi you’vegotafriendinme.
-3. Klik tombol “Browse” untuk memilih file graf yang ingin digunakan. Pastikan format isi file graf sesuai. Contoh format isi file graf yang sesuai ada di folder src/test.
+3. Klik tombol “Browse” untuk memilih file graf yang ingin digunakan. Pastikan format isi file graf sesuai. Contoh format isi file graf yang sesuai ada di folder test.
 4. Jika format file sesuai, akan ditampilkan visualisasi graf dari file graf yang dimasukkan kedalam aplikasi.
 5. Pilih fitur dan algoritma yang ingin Anda gunakan. Kemudian pilih akun-akun yang dibutuhkan untuk menggunakan fitur tersebut. Fitur Friend Recommendation hanya membutuhkan 1 akun yang ada pada graf, sedangkan fitur Explore Friends membutuhkan dua akun yang ada pada graf.
 6. Untuk menampilkan hasilnya, klik tombol “Submit”. Hasil akan ditampilkan di kolom “Result”.
